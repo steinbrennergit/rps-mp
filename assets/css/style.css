@@ -1,0 +1,33 @@
+body {
+    background-color: #DFF2A2;
+}
+
+#header {
+    background-color: #B1CA65;
+    padding-bottom: 5px;
+}
+
+#chat-box {
+    border-radius: 0;
+    border: 1px solid darkgray;
+    margin-top: 30px;
+    overflow-y: scroll;
+    height: 250px;
+    padding: 1rem;
+}
+
+#chat-input {
+    width: 89.7%;
+}
+
+#chat-send {
+    width: 9.6%;
+}
+
+.playbox {
+    border: 1px solid #555;
+}
+
+.hide {
+    display: none;
+}
