@@ -24,7 +24,11 @@ body {
     width: 9.6%;
 }
 
-.playbox {
+.active-turn {
+    border: 4px solid yellow;
+}
+
+.inactive-turn {
     border: 1px solid #555;
 }
 
