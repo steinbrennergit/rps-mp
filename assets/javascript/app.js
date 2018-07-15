@@ -384,6 +384,8 @@ players.on("value", function (snap) {
     }
 
     if (onePlaying && twoPlaying) {
+        $p1score.removeClass("hide");
+        $p2score.removeClass("hide");
         hideInput();
     } else {
         if (!onePlaying) {
