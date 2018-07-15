@@ -46,7 +46,6 @@ var playerTwoRef = null;
 // Initial database value
 start.set({ playing: false });
 
-
 // Hide the input box so players cannot join the game
 function hideInput() {
     $("#name").addClass("hide");
@@ -87,7 +86,7 @@ function setPlayer(p) {
 // Removes a player if they disconnect
 function emptyPlayer(n) {
     if (n === 1) {
-        console.log('dumped player 1')
+        // console.log('dumped player 1')
         playerOneRef = null;
         playerOne = false;
         $p1W.text("0");
@@ -95,7 +94,7 @@ function emptyPlayer(n) {
         $("#p1-name").text("Waiting for Player 1");
         $p1score.addClass("hide");
     } else {
-        console.log("dumped player 2")
+        // console.log("dumped player 2")
         playerTwoRef = null;
         playerTwo = false;
         $p2W.text("0");
@@ -174,6 +173,7 @@ var clock = {
 // Game object, core game logic and updating displays
 var game = {
 
+    // Used to stop the game if someone disconnects
     stop: function() {
         clock.stop();
         clearTimeout(timeoutId);
@@ -182,6 +182,8 @@ var game = {
         $box.addClass("inactive-turn");
     },
 
+    // Handles the logic for starting a new turn
+    // Start a new clock, make both play boxes active, show buttons for player
     newTurn: function () {
         $res.empty();
         clock.start(20);
@@ -194,6 +196,7 @@ var game = {
         $box.addClass("active-turn");
     },
 
+    // Display game results, increment appropriate counters, timeout for next turn
     endTurn: function (n) {
         clock.stop();
         $p1btns.addClass("hide");
@@ -217,6 +220,7 @@ var game = {
         timeoutId = setTimeout(game.newTurn, 4500);
     },
 
+    // Handles comparison logic to determine who won; pass winner to endTurn()
     playTurn: function () {
 
         if (p1Choice === null && p2Choice === null) {
@@ -281,6 +285,7 @@ var game = {
         p2Choice = null;
     },
 
+    // Start the game
     init: function () {
         // console.log("Ready to play!");
         $p1score.removeClass("hide");
