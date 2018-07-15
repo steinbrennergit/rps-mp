@@ -1,21 +1,3 @@
-/*
-### Instructions
-
-* Create a game that suits this user story:
-
-  * Only two users can play at the same time.
-
-  * Both players pick either `rock`, `paper` or `scissors`. After the players make their selection, the game will tell them whether a tie occurred or if one player defeated the other.
-
-  * The game will track each player's wins and losses.
-
-  * Throw some chat functionality in there! No online multiplayer game is complete without having to endure endless taunts and insults from your jerk opponent.
-
-  * Styling and theme are completely up to you. Get Creative!
-
-  * Deploy your assignment to Github Pages.
-*/
-
 // found at https://steinbrennergit.github.io/rps-multiplayer/
 // repo at https://github.com/steinbrennergit/rps-multiplayer/
 
@@ -45,7 +27,7 @@ const $p1L = $("#p1-losses");
 const $p2W = $("#p2-wins");
 const $p2L = $("#p2-losses");
 /*******************************/
-
+// Global variables
 var intervalId = null;
 
 var p1Choice = null;
@@ -59,26 +41,32 @@ var playerTwo = false;
 
 var playerOneRef = null;
 var playerTwoRef = null;
-
+/*******************************/
+// Initial database value
 start.set({ playing: false });
 
+
+// Hide the input box so players cannot join the game
 function hideInput() {
     $("#name").addClass("hide");
     $("#ok").addClass("hide");
     $("label").addClass("hide");
 }
 
+// Show the input box for a player to join the game
 function showInput() {
     $("#name").removeClass("hide");
     $("#ok").removeClass("hide");
     $("label").removeClass("hide");
 }
 
+// Called repeatedly to keep chat scrolled to the bottom to see new msgs
 function scrollChatToBottom() {
     var div = document.getElementById("chat-box");
     div.scrollTop = div.scrollHeight - div.clientHeight;
 }
 
+// Sets a new player
 function setPlayer(p) {
     if (p.player === 1) {
         playerOneRef = p;
@@ -91,6 +79,7 @@ function setPlayer(p) {
     }
 }
 
+// Removes a player if they disconnect
 function emptyPlayer(n) {
     if (n === 1) {
         playerOneRef = null;
@@ -171,6 +160,7 @@ var clock = {
 };
 // End of clock code
 
+// Game object, core game logic and updating displays
 var game = {
 
     newTurn: function () {
@@ -279,7 +269,9 @@ var game = {
         this.newTurn();
     }
 };
+// End of game code
 
+// Code for chat functionality
 $("#chat-send").on("click", function () {
     event.preventDefault();
 
@@ -301,6 +293,16 @@ $("#chat-send").on("click", function () {
 
 });
 
+chat.on("child_added", function (snap) {
+    // console.log(snap.val());
+    let newMsg = $("<p>");
+    newMsg.text(snap.val().text);
+    $("#chat-box").append(newMsg);
+    scrollChatToBottom();
+}, function (error) { console.log(error); });
+// End of chat code
+
+// Listener for new player input; hides after activated
 $("#ok").on("click", function () {
     event.preventDefault();
 
@@ -335,12 +337,16 @@ $("#ok").on("click", function () {
     hideInput();
 });
 
+// When database is provided a new start value, start the game
+// Happens when both "seats" get filled
 start.on("value", function (snap) {
     if (snap.val().playing) {
         game.init();
     }
 });
 
+// When a player makes a choice, store the data locally
+// If we have both choices stored locally, play the turn
 choices.on("child_added", function (snap) {
     let data = snap.val();
     if (data.player === 1) {
@@ -359,14 +365,9 @@ choices.on("child_added", function (snap) {
     }
 });
 
-chat.on("child_added", function (snap) {
-    // console.log(snap.val());
-    let newMsg = $("<p>");
-    newMsg.text(snap.val().text);
-    $("#chat-box").append(newMsg);
-    scrollChatToBottom();
-}, function (error) { console.log(error); });
-
+// When a new player is added to or removed from the game (or when doc is loaded)
+// Display existing players and add/display new player
+// If necessary, show/hide the input field for new players to join
 players.on("value", function (snap) {
     let players = snap.val();
 
@@ -400,6 +401,7 @@ players.on("value", function (snap) {
     }
 }, function (error) { console.log(error); });
 
+// Player chooses rock, paper or scissors
 $(document).on("click", ".action-button", function () {
     let choice = $(this).val();
     if (playerOne) {
