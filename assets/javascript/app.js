@@ -29,6 +29,7 @@ const $p2L = $("#p2-losses");
 /*******************************/
 // Global variables
 var intervalId = null;
+var timeoutId = null;
 
 var p1Choice = null;
 var p2Choice = null;
@@ -71,10 +72,14 @@ function setPlayer(p) {
     if (p.player === 1) {
         playerOneRef = p;
         onePlaying = true;
+        $p1W.text(p.wins);
+        $p1L.text(p.losses);
         $("#p1-name").text(p.name);
     } else {
         playerTwoRef = p;
         twoPlaying = true;
+        $p2W.text(p.wins);
+        $p2L.text(p.losses);
         $("#p2-name").text(p.name);
     }
 }
@@ -82,23 +87,29 @@ function setPlayer(p) {
 // Removes a player if they disconnect
 function emptyPlayer(n) {
     if (n === 1) {
+        console.log('dumped player 1')
         playerOneRef = null;
         playerOne = false;
-        scoreOne = 0;
+        $p1W.text("0");
+        $p1L.text("0");
         $("#p1-name").text("Waiting for Player 1");
         $p1score.addClass("hide");
-        $p2btns.addClass("hide");
     } else {
+        console.log("dumped player 2")
         playerTwoRef = null;
         playerTwo = false;
-        scoreTwo = 0;
+        $p2W.text("0");
+        $p2L.text("0");
         $("#p2-name").text("Waiting for Player 2");
         $p2score.addClass("hide");
-        $p1btns.addClass("hide");
     }
+
+    $p2btns.addClass("hide");
+    $p1btns.addClass("hide");
 
     chat.remove();
     $("#chat-box").empty();
+    start.set({ playing: false });
 }
 
 // Pulled clock code from hmwk 5
@@ -163,6 +174,14 @@ var clock = {
 // Game object, core game logic and updating displays
 var game = {
 
+    stop: function() {
+        clock.stop();
+        clearTimeout(timeoutId);
+        $res.empty();
+        $box.removeClass("active-turn");
+        $box.addClass("inactive-turn");
+    },
+
     newTurn: function () {
         $res.empty();
         clock.start(20);
@@ -195,7 +214,7 @@ var game = {
         $p1L.text(playerOneRef.losses);
         $p2W.text(playerTwoRef.wins);
         $p2L.text(playerTwoRef.losses);
-        setTimeout(game.newTurn, 4500);
+        timeoutId = setTimeout(game.newTurn, 4500);
     },
 
     playTurn: function () {
@@ -342,6 +361,8 @@ $("#ok").on("click", function () {
 start.on("value", function (snap) {
     if (snap.val().playing) {
         game.init();
+    } else {
+        game.stop();
     }
 });
 
