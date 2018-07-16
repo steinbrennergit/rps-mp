@@ -16,4 +16,8 @@
 
   # Known bugs
 
-  * If a spectator joins in the middle of an active turn, both player boxes will appear inactive (gray border instead of yellow highlight) until the next turn.
+  * If a spectator joins in the middle of an active turn, both players' boxes will appear inactive (gray border, instead of yellow highlight) on their own screens until the next turn. No gameplay behavior is affected.
+
+  * Occasionally, a player may make a choice, and the turn will end for both players, resulting in a win for the player who made a choice. I have been unable to reliably replicate this bug, and believe it to be a result of inconsistent Firebase performance. 
+
+  * Occasionally, the timers for player 1 and player 2 will get out of sync, resulting in odd behavior. I have been unable to reliably replicate this bug, and believe it to be a result of inconsistent Firebase performance.
