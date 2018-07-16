@@ -18,6 +18,8 @@ const $res = $("#result");
 const $box = $(".playbox");
 const $p1 = $("#player-one");
 const $p2 = $("#player-two");
+const $c1 = $("#choice1");
+const $c2 = $("#choice2");
 const $p1btns = $(".p1");
 const $p2btns = $(".p2");
 const $p1score = $("#p1score");
@@ -174,17 +176,48 @@ var clock = {
 var game = {
 
     // Used to stop the game if someone disconnects
-    stop: function() {
+    stop: function () {
         clock.stop();
         clearTimeout(timeoutId);
         $res.empty();
+        $c1.text("");
+        $c2.text("");
         $box.removeClass("active-turn");
         $box.addClass("inactive-turn");
+    },
+
+    // Display the choices made by both players
+    displayChoices: function () {
+        switch (p1Choice) {
+            case "r":
+                $c1.text("Rock");
+                break;
+            case "p":
+                $c1.text("Paper");
+                break;
+            case "s":
+                $c1.text("Scissors");
+                break;
+        }
+
+        switch (p2Choice) {
+            case "r":
+                $c2.text("Rock");
+                break;
+            case "p":
+                $c2.text("Paper");
+                break;
+            case "s":
+                $c2.text("Scissors");
+                break;
+        }
     },
 
     // Handles the logic for starting a new turn
     // Start a new clock, make both play boxes active, show buttons for player
     newTurn: function () {
+        $c1.text("");
+        $c2.text("");
         $res.empty();
         clock.start(20);
         if (playerOne) {
@@ -203,6 +236,8 @@ var game = {
         $p2btns.addClass("hide");
         $box.removeClass("active-turn");
         $box.addClass("inactive-turn");
+
+        this.displayChoices();
 
         let result = $("<h3>");
         if (n === 0) {
@@ -434,10 +469,14 @@ $(document).on("click", ".action-button", function () {
         // console.log("Player one choice:", choice);
         choices.push({ player: 1, choice });
         $p1btns.addClass("hide");
+
+        $("#choice1").text($(this).text())
     } else if (playerTwo) {
         // console.log("Player two choice:", choice);
         choices.push({ player: 2, choice });
         $p2btns.addClass("hide");
+
+        $("#choice2").text($(this).text())
     }
 });
 
