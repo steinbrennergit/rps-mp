@@ -108,6 +108,9 @@ function emptyPlayer(n) {
     $p2btns.addClass("hide");
     $p1btns.addClass("hide");
 
+    p1Choice = null;
+    p2Choice = null;
+    choices.remove();
     chat.remove();
     $("#chat-box").empty();
     start.set({ playing: false });
